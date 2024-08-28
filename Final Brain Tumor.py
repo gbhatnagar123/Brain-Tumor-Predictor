@@ -9,7 +9,6 @@ Original file is located at
 # TASK #2: IMPORT LIBRARIES AND DATASETS
 """
 
-# Commented out IPython magic to ensure Python compatibility.
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -60,15 +59,6 @@ brain_df.mask_path[1] # Path to the brain MRI image
 
 brain_df.image_path[1] # Path to the segmentation mask
 
-"""MINI CHALLENGE #1:
-  - Do we have a balanced dataset?
-  - How many samples are classified as 'healthy'?
-"""
-
-
-
-"""# TASK #3: PERFORM DATA VISUALIZATION"""
-
 
 
 brain_df['mask'].value_counts().index
@@ -107,9 +97,7 @@ for x in range(6):
 
 fig.tight_layout()
 
-"""MINI CHALLENGE #2:
- - Plot 12 randomly selected (1) MRI scan images from only sick patients followed by (2) corresponding mask, (3) both MRI image and the corresponding mask (in red color) on top of each other
-"""
+#Plot 12 randomly selected (1) MRI scan images from only sick patients followed by (2) corresponding mask, (3) both MRI image and the corresponding mask (in red color) on top of each other
 
 count = 0
 fig, axs = plt.subplots(12, 3, figsize = (20, 50))
@@ -132,8 +120,6 @@ for i in range(len(brain_df)):
 fig.tight_layout()
 
 
-
-"""# TASK #6: TRAIN A CLASSIFIER MODEL TO DETECT IF TUMOR EXISTS OR NOT"""
 
 # Drop the patient id column
 brain_df_train = brain_df.drop(columns = ['patient_id'])
@@ -239,9 +225,6 @@ checkpointer = ModelCheckpoint(filepath="classifier-resnet-weights.keras", verbo
 #with open("classifier-resnet-model.json","w") as json_file:
   #json_file.write(model_json)
 
-"""# TASK #7: ASSESS TRAINED MODEL PERFORMANCE"""
-
-# Load pretrained model (instead of training the model for 1+ hours)
 # Load pretrained model (instead of training the model for 1+ hours)
 with open('resnet-50-MRI.json', 'r') as json_file:
     json_savedModel= json_file.read()
@@ -267,11 +250,11 @@ predict = np.asarray(predict)
 
 predict
 
-#Since we have used test generator, it limited the images to len(predict), due to btch size
+#Since we have used test generator, it limited the images to len(predict), due to batch size
 
 original = np.asarray(test['mask'])[:len(predict)]
 len(original)
-
+#Evaluate Model
 from sklearn.metrics import accuracy_score
 
 accuracy = accuracy_score(original, predict)
@@ -285,16 +268,15 @@ cm = confusion_matrix(original,predict)
 plt.figure(figsize=(7,7))
 sns.heatmap(cm,annot=True)
 
-"""MINI CHALLENGE #6:
-- Print out the classification report and comment on the precision, recall and F1-score results
-"""
+
+#Print out the classification report and comment on the precision, recall and F1-score results
+
 
 from sklearn.metrics import classification_report
 
 report = classification_report(original,predict, labels=[0,1])
 print(report)
 
-"""# TASK #9: BUILD A SEGMENTATION MODEL TO LOCALIZE TUMOR"""
 
 #Get the dataframe containing MRI's which have mask associated with them
 
@@ -407,13 +389,11 @@ output = Conv2D(1, (1,1), padding = "same", activation = "sigmoid")(up_4)
 
 model_seg = Model(inputs = X_input, outputs = output )
 
-"""MINI CHALLENGE #7:
-- print out the segmentation model summary and list the total number of trainable parameters
-"""
+
 
 model_seg.summary()
 
-"""# TASK #10: TRAIN A SEGMENTATION RESUNET MODEL TO LOCALIZE TUMOR
+"""
 
 ## Loss function:
 
@@ -450,7 +430,7 @@ checkpointer = ModelCheckpoint(filepath="ResUNet-weights.keras", verbose=1, save
 
 
 
-"""# TASK #11: ASSESS TRAINED SEGMENTATION RESUNET MODEL PERFORMANCE"""
+#Assess Performance
 
 from utilities import focal_tversky, tversky_loss, tversky
 
@@ -511,10 +491,8 @@ for i in range(len(df_pred)):
 
 fig.tight_layout()
 
-"""MINI CHALLENGE:
-- Plot 30 images along with their corresponding mask
-- Visually verify that model predictions made sense
-"""
+# Plot 30 images along with their corresponding mask
+
 
 count = 0
 fig, axs = plt.subplots(30, 5, figsize=(30, 50))
