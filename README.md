@@ -71,8 +71,7 @@ To set up the environment for this project, follow these steps:
 
 ## **Results**
 
-- **Classification Model**: Achieved an accuracy of **X%** on the test set.
-- **Segmentation Model**: Achieved an Intersection over Union (IoU) score of **Y%** on the test set.
+- **Classification Model**: Achieved an accuracy of **98%** on the test set.
 
 ## **Contributing**
 
